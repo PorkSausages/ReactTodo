@@ -20,13 +20,6 @@ const NewTodo: React.FC<{ props: ITodoListProps, update: Function }> = ({ props,
         setDialogOpen(true);
     }
 
-    const handleKeyPress = (ev: KeyboardEvent) => {
-        if (ev.key == 'Enter') {
-            updateState();
-            setDialogOpen(false);
-        }
-    }
-
     const updateState = () => {
         const newId = props.todos.length + 1;
         const newTodo: ITodo = {
@@ -52,7 +45,7 @@ const NewTodo: React.FC<{ props: ITodoListProps, update: Function }> = ({ props,
     }
 
     return (
-        <div className={"new-todo-dialog"} onKeyDown={handleKeyPress}>
+        <div className={"new-todo-dialog"}>
             <Dialog open={dialogOpen}>
                 <DialogTitle>New Todo</DialogTitle>
                 <LocalizationProvider dateAdapter={DateAdapter}>
