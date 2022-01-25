@@ -7,22 +7,15 @@ export interface ITodoListProps {
 
 const TodoList: React.FC<{ props: ITodoListProps, update: Function }> = ({ props, update }) => {
     const updateTodo: Function = (id: number, todo: ITodo) => {
-        let newState: ITodoListProps = { todos: [] };
-
-        props.todos.map(oldTodo => {
-            if (oldTodo.id === id) {
-                const newTodo: ITodo = {
-                    id,
-                    title: todo.title,
-                    due: todo.due,
-                    completed: todo.completed
-                };
-
-                newState.todos.push(newTodo);
-            } else {
-                newState.todos.push(oldTodo);
-            }
-        });
+        let newState: ITodoListProps = { 
+            todos: props.todos.map(oldTodo => {
+                if(oldTodo.id === id) {
+                    return todo;
+                } else {
+                    return oldTodo;
+                }
+            })
+        };
 
         update(newState);
     }

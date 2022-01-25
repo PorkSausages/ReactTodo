@@ -17,6 +17,7 @@ const NewTodo: React.FC<{ props: ITodoListProps, update: Function }> = ({ props,
 
     const handleNewTodoClick = () => {
         setNewTodoDue(moment());
+        setNewTodoTitle("");
         setDialogOpen(true);
     }
 
@@ -28,19 +29,19 @@ const NewTodo: React.FC<{ props: ITodoListProps, update: Function }> = ({ props,
             due: newTodoDue.toDate(),
             completed: false
         };
-        let newState: ITodoListProps = { todos: [] };
 
-        props.todos.map(todo => {
-            newState.todos.push(todo);
-        });
-
+        let newState: ITodoListProps = {
+            todos: props.todos.map(todo => {
+                return todo;
+            })
+        };
         newState.todos.push(newTodo);
 
         update(newState);
     }
 
     const createNewTodo = () => {
-        updateState();
+        if (newTodoTitle != "") { updateState() }
         setDialogOpen(false);
     }
 
@@ -50,25 +51,28 @@ const NewTodo: React.FC<{ props: ITodoListProps, update: Function }> = ({ props,
                 <DialogTitle>New Todo</DialogTitle>
                 <LocalizationProvider dateAdapter={DateAdapter}>
                     <DialogContent>
-                        <div className="text-field-padding">
-                            <TextField
-                                id="new-todo-title"
-                                label="Title"
-                                variant="outlined"
-                                onChange={(newValue) => {
-                                    setNewTodoTitle(newValue.currentTarget.value);
+                        <div className="new-todo-container">
+                            <div className="text-field-padding">
+                                <TextField
+                                    id="new-todo-title"
+                                    label="Title"
+                                    variant="outlined"
+                                    onChange={(newValue) => {
+                                        setNewTodoTitle(newValue.currentTarget.value);
+                                    }}
+                                />
+                            </div>
+                            <DesktopDateTimePicker
+                                value={newTodoDue}
+                                onChange={(newValue: any) => {
+                                    setNewTodoDue(newValue);
                                 }}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
                             />
-                        </div>
-                        <DesktopDateTimePicker
-                            value={newTodoDue}
-                            onChange={(newValue: any) => {
-                                setNewTodoDue(newValue);
-                            }}
-                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
-                        />
-                        <div className="text-field-padding">
-                            <Button variant="contained" onClick={createNewTodo}>Yes</Button>
+                            <div className="add-todo-button">
+                                <Button variant="contained" onClick={createNewTodo}>Add</Button>
+                                <Button variant="outlined" onClick={() => { setDialogOpen(false); }}>Cancel</Button>
+                            </div>
                         </div>
                     </DialogContent>
                 </LocalizationProvider>
